@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-cluster-issuer"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: better-app
+spec:
+  tls:
+  - hosts:
+    - better.boredotter.dev
+    secretName: better-app-tls
+  rules:
+  - host: better.boredotter.dev
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: better-service
+            port:
+              number: 80
