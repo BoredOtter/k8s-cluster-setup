@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: meme-giver
+  labels:
+    name: meme-giver
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meme-giver
+  namespace: meme-giver
+spec:
+  replicas: 1  # You can adjust the number of replicas as needed
+  selector:
+    matchLabels:
+      app: meme-giver
+  template:
+    metadata:
+      labels:
+        app: meme-giver
+    spec:
+      containers:
+      - name: meme-giver
+        image: ksw2137/meme-giver  # Replace with the actual image name and tag
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: meme-giver-service
+  namespace: meme-giver
+spec:
+  selector:
+    app: meme-giver
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+  type: LoadBalancer  # Use "NodePort" or "ClusterIP" if LoadBalancer isn't available
