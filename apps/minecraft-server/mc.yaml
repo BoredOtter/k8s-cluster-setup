@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: minecraft-server
+  labels:
+    name: minecraft-server
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: minecraft
+  namespace: minecraft-server
+spec:
+  selector:
+    app: minecraft
+  ports:
+    - protocol: TCP
+      port: 25565
+      targetPort: 25565
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minecraft
+  namespace: minecraft-server
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minecraft
+  namespace: minecraft-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minecraft
+  template:
+    metadata:
+      labels:
+        app: minecraft
+    spec:
+      containers:
+        - name: minecraft
+          image: itzg/minecraft-server
+          env:
+            - name: EULA
+              value: "TRUE"
+          ports:
+            - containerPort: 25565
+          volumeMounts:
+            - name: minecraft-data
+              mountPath: /data
+      volumes:
+        - name: minecraft-data
+          persistentVolumeClaim:
+            claimName: minecraft

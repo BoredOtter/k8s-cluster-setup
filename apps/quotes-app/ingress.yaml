@@ -5,21 +5,21 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-cluster-issuer"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-  name: better-app
-  namespace: meme-giver
+  name: quotes-app
+  namespace: quotes-app
 spec:
   tls:
   - hosts:
-    - jp2gmd.boredotter.dev
-    secretName: meme-giver-tls
+    - quotes.boredotter.dev
+    secretName: quotes-app-tls
   rules:
-  - host: jp2gmd.boredotter.dev
+  - host: quotes.boredotter.dev
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: meme-giver-service
+            name: quotes-app
             port:
               number: 80

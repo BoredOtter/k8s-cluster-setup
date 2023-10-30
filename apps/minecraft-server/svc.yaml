@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: minecraft
+  name: minecraft
+  namespace: minecraft-server
+spec:
+  ports:
+  - name: minecraft
+    port: 25565
+    targetPort: 25565
+    protocol: TCP
+  selector:
+    app: minecraft
